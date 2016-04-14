@@ -48,7 +48,7 @@ public class BookKeeperTest {
 		
 		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
 
-		invoiceRequest.add(createSampleRequestItem());
+		invoiceRequest.add(RequestItemBuilder.requestItem().build());
 
 		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 		
@@ -60,8 +60,8 @@ public class BookKeeperTest {
 	public void issuance_InvoiceWithTwoItems_behaviourTest() {
 		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
 
-		invoiceRequest.add(createSampleRequestItem());
-		invoiceRequest.add(createSampleRequestItem());
+		invoiceRequest.add(RequestItemBuilder.requestItem().build());
+		invoiceRequest.add(RequestItemBuilder.requestItem().build());
 
 		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 
@@ -83,8 +83,8 @@ public class BookKeeperTest {
 	public void issuance_checkIfInvoiceIsCreatedOnlyOnce_behaviourTest(){
 		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
 
-		invoiceRequest.add(createSampleRequestItem());
-		invoiceRequest.add(createSampleRequestItem());
+		invoiceRequest.add(RequestItemBuilder.requestItem().build());
+		invoiceRequest.add(RequestItemBuilder.requestItem().build());
 
 		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 
@@ -99,12 +99,6 @@ public class BookKeeperTest {
 		return invoice;
 	}
 
-	private RequestItem createSampleRequestItem(){
-		ProductData productData = mock(ProductData.class); //ProductData constructor is not visible from here
-		when(productData.getType()).thenReturn(ProductType.STANDARD);
-		RequestItem item = new RequestItem(productData,  1, Money.ZERO);
-		return item;
-	}
 
 
 }
