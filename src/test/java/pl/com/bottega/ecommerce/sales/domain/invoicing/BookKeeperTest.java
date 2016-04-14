@@ -60,7 +60,14 @@ public class BookKeeperTest {
 
 	@Test
 	public void issuance_InvoiceWithTwoItems_behaviorTest() {
-		fail("Not yet implemented");
+		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
+
+		invoiceRequest.add(createSampleRequestItem());
+		invoiceRequest.add(createSampleRequestItem());
+
+		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+
+		verify(taxPolicy, times(2)).calculateTax(any(ProductType.class), any(Money.class));
 	}
 
 	private Tax createSampleTax() {
