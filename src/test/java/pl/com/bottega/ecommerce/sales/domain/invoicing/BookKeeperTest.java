@@ -35,7 +35,7 @@ public class BookKeeperTest {
 
 		taxPolicy = mock(TaxPolicy.class);
 
-		tax = createSampleTax();
+		tax = TaxBuilder.tax().build();
 
 		when(taxPolicy.calculateTax(any(ProductType.class), any(Money.class))).thenReturn(tax);
 
@@ -90,9 +90,6 @@ public class BookKeeperTest {
 		verify(invoiceFactoryStub, times(1)).create(any(ClientData.class));
 	}
 
-	private Tax createSampleTax() {
-		return new Tax(Money.ZERO,"sample tax");
-	}
 
 
 	private Invoice createSampleInvoice(){

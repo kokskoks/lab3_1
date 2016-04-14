@@ -4,7 +4,7 @@ import pl.com.bottega.ecommerce.sharedkernel.Money;
 
 public class TaxBuilder {
 	
-	private Money money = new Money(1d, "USD");
+	private Money money = Money.ZERO;
 	private String description = "Test";
 	
 	public static TaxBuilder tax(){
