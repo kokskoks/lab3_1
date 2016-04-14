@@ -56,7 +56,7 @@ public class BookKeeperTest {
 	}
 
 	@Test
-	public void issuance_InvoiceWithTwoItems_behaviorTest() {
+	public void issuance_InvoiceWithTwoItems_behaviourTest() {
 		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
 
 		invoiceRequest.add(createSampleRequestItem());
@@ -65,6 +65,29 @@ public class BookKeeperTest {
 		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 
 		verify(taxPolicy, times(2)).calculateTax(any(ProductType.class), any(Money.class));
+	}
+
+	@Test
+	public void issuance_InvoiceRequestNoItems_resultTest() {
+
+		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
+
+		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+
+		assertThat(invoice.getItems().size(), Matchers.is(0));
+
+	}
+
+	@Test
+	public void issuance_checkIfInvoiceIsCreatedOnlyOnce_behaviourTest(){
+		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
+
+		invoiceRequest.add(createSampleRequestItem());
+		invoiceRequest.add(createSampleRequestItem());
+
+		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+
+		verify(invoiceFactoryStub, times(1)).create(any(ClientData.class));
 	}
 
 	private Tax createSampleTax() {
