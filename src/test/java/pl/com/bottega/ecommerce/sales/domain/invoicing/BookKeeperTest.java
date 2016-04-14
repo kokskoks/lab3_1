@@ -31,7 +31,8 @@ public class BookKeeperTest {
 
 		when(invoiceFactoryStub.create(any(ClientData.class))).thenReturn(invoiceToReturn);
 
-		invoiceRequest = new InvoiceRequest(createSampleClientData());
+		ClientData clientData = ClientDataBuilder.clientData().build();
+		invoiceRequest = new InvoiceRequest(clientData);
 
 		taxPolicy = mock(TaxPolicy.class);
 
@@ -93,7 +94,8 @@ public class BookKeeperTest {
 
 
 	private Invoice createSampleInvoice(){
-		Invoice invoice = new Invoice(Id.generate(), createSampleClientData());
+		ClientData clientData = ClientDataBuilder.clientData().build();
+		Invoice invoice = new Invoice(Id.generate(), clientData);
 		return invoice;
 	}
 
@@ -104,8 +106,5 @@ public class BookKeeperTest {
 		return item;
 	}
 
-	private ClientData createSampleClientData(){
-		return  new ClientData(Id.generate(), "Test");
-	}
 
 }
