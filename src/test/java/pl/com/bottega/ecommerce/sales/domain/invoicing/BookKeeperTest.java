@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.hamcrest.Matchers;
 
@@ -18,26 +19,39 @@ import pl.com.bottega.ecommerce.sharedkernel.Money;
 
 
 public class BookKeeperTest {
+	InvoiceFactory invoiceFactoryStub;
+	Invoice invoiceToReturn;
+	InvoiceRequest invoiceRequest;
+	TaxPolicy taxPolicy;
+	Tax tax;
+
+
+	@Before
+	public void setUp(){
+		invoiceFactoryStub = mock(InvoiceFactory.class);
+
+		invoiceToReturn = createSampleInvoice();
+
+		when(invoiceFactoryStub.create(any(ClientData.class))).thenReturn(invoiceToReturn);
+
+		invoiceRequest = new InvoiceRequest(createSampleClientData());
+
+		taxPolicy = mock(TaxPolicy.class);
+
+		tax = createSampleTax();
+
+		when(taxPolicy.calculateTax(any(ProductType.class), any(Money.class))).thenReturn(tax);
+
+	}
 
 	@Test
 	public void issuance_InvoiceWithOneItem_resultTest() {
-		InvoiceFactory invoiceFactoryStub = mock(InvoiceFactory.class);
 
-		Invoice invoiceToReturn = createSampleInvoice();
-
-		when(invoiceFactoryStub.create(any(ClientData.class))).thenReturn(invoiceToReturn);
 		
 		BookKeeper bookKeeper = new BookKeeper(invoiceFactoryStub);
 
-		InvoiceRequest invoiceRequest = new InvoiceRequest(createSampleClientData());
 		invoiceRequest.add(createSampleRequestItem());
-		
-		TaxPolicy taxPolicy = mock(TaxPolicy.class);
-		
-		Tax tax = createSampleTax();
-		
-		when(taxPolicy.calculateTax(any(ProductType.class), any(Money.class))).thenReturn(tax);
-		
+
 		Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 		
 		assertThat(invoice.getItems().size(), Matchers.is(1));
